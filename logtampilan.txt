@@ -1,0 +1,3 @@
+The following files were investigated for incorrect meeting status display:
+- `doors-app/resources/views/meetings/list/show.blade.php`: Already uses `calculated_status`. No changes needed.
+- `doors-app/resources/views/meetings/list/edit.blade.php`: Does not display meeting status. No changes needed.

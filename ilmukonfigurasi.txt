@@ -1,0 +1,48 @@
+### Ilmu Terkait Konfigurasi Dinamis dan API SSO
+
+**1. Fitur Konfigurasi Dinamis (Melalui Halaman `/settings/configurations`)**
+
+*   **Apa itu?**
+    Fitur ini memungkinkan Anda untuk menyimpan dan mengelola pengaturan aplikasi sebagai pasangan *key-value* langsung di database. Ini berarti Anda bisa mengubah perilaku aplikasi tanpa perlu memodifikasi kode sumber atau melakukan *deployment* ulang.
+
+*   **Mengapa Berguna?**
+    *   **Fleksibilitas:** Mengubah nilai konfigurasi (misalnya, durasi default rapat, status mode pemeliharaan, kunci API) secara *on-the-fly*.
+    *   **Manajemen Mudah:** Administrator dapat mengelola pengaturan melalui antarmuka web yang ramah pengguna.
+    *   **Konsistensi Lingkungan:** Pengaturan disimpan di database, sehingga konsisten di berbagai lingkungan (development, staging, production) jika database disinkronkan.
+
+*   **Contoh Penggunaan:**
+    *   `default_meeting_duration`: Durasi default rapat dalam menit.
+    *   `app_maintenance_mode`: Mengaktifkan/menonaktifkan mode pemeliharaan aplikasi.
+    *   `max_participants_per_meeting`: Batas maksimum peserta rapat.
+
+**2. Penggunaan untuk API SSO (Single Sign-On)**
+
+*   **Apa itu SSO?**
+    SSO adalah metode autentikasi yang memungkinkan pengguna untuk login ke beberapa aplikasi dan situs web dengan satu set kredensial. Ini meningkatkan pengalaman pengguna dan keamanan.
+
+*   **Bagaimana Konfigurasi Digunakan untuk SSO?**
+    Jika aplikasi Anda terintegrasi dengan penyedia SSO (misalnya, Google, Microsoft Azure AD, Okta), Anda biasanya memerlukan parameter seperti:
+    *   `sso_client_id`: ID klien yang diberikan oleh penyedia SSO.
+    *   `sso_client_secret`: Rahasia klien (kata sandi) untuk autentikasi aplikasi Anda ke penyedia SSO.
+    *   `sso_redirect_url`: URL di aplikasi Anda tempat penyedia SSO akan mengarahkan pengguna setelah autentikasi.
+    *   `sso_api_key`: Kunci API spesifik jika penyedia SSO menggunakannya.
+
+*   **Manfaat Menyimpan Kunci SSO di Konfigurasi:**
+    *   **Fleksibilitas:** Jika kunci API atau ID klien SSO berubah, Anda bisa memperbaruinya melalui antarmuka web tanpa menyentuh kode.
+    *   **Pemisahan Konfigurasi:** Memisahkan detail kredensial SSO dari kode sumber, membuatnya lebih mudah dikelola.
+
+*   **Cara Mengambil Nilai dalam Kode:**
+    ```php
+    use App\Models\Configuration;
+
+    // Mengambil nilai konfigurasi SSO API Key
+    $ssoApiKey = Configuration::where('key', 'sso_api_key')->value('value');
+
+    // Mengambil nilai konfigurasi SSO Client ID
+    $ssoClientId = Configuration::where('key', 'sso_client_id')->value('value');
+
+    // Gunakan $ssoApiKey, $ssoClientId, dll., dalam logika integrasi SSO Anda
+    ```
+
+**Penting:**
+Meskipun konfigurasi database sangat fleksibel, untuk kredensial yang sangat sensitif seperti `sso_client_secret`, praktik terbaik keamanan seringkali merekomendasikan untuk tetap menyimpannya sebagai **variabel lingkungan (`.env`)** dan tidak di database, karena `.env` tidak dapat diakses melalui antarmuka web. Namun, untuk kunci API yang kurang sensitif atau yang perlu sering diubah oleh administrator, konfigurasi database adalah pilihan yang sangat baik.

@@ -1,0 +1,9 @@
+http://127.0.0.1:8000/meeting/bookings/create?room_id=1
+
+akan ada sedikit perubahan pada halaman ini.
+
+1. ada eror yang tidak menampilkan gambar dari ruangan nya
+2. disana kan ada field untuk start time yak. saya ingin itu di suggested untuk waktu rapat terdekat. contoh di jam 12:07 saya ingin memesan rapat, maka di field mengisi nya ke jam terdekat menjadi 12:15 karena hitungan menit kita kelipatan 15 kan.
+3. tambahkan chip status sama seperti di komponen card halaman http://127.0.0.1:8000/meeting/room-reservations di bawah tulisan facilities
+
+sementara ini dulu
