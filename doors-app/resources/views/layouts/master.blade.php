@@ -17,6 +17,9 @@
 
     @vite('resources/css/app.css')
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/main.min.css" crossorigin="anonymous" type="text/css" />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js'></script>
+
         {{-- <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
 
         <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/resource-timeline@6.1.11/index.global.min.js'></script> --}}
@@ -186,6 +189,8 @@
                                 <span>Meeting List</span>
 
                             </x-sidebar-link>
+
+
 
                             <x-sidebar-link :href="route('meeting.analytics.index')" :active="request()->routeIs('meeting.analytics.*')">
 
@@ -450,6 +455,85 @@
     @vite('resources/js/app.js')
 
     @livewireScripts
+
+    <script>
+        let calendar; // Declare calendar globally
+        let modal; // Declare modal globally
+        let modalTitle;
+        let modalBody;
+        let modalFooter;
+
+        function initFullCalendar(eventsData) {
+            const calendarEl = document.getElementById('calendar');
+            if (!calendarEl) return;
+
+            if (calendar) { // Destroy existing calendar instance if it exists
+                calendar.destroy();
+            }
+
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: eventsData,
+                eventClick: function(info) {
+                    modal = document.getElementById('eventModal');
+                    modalTitle = document.getElementById('modalTitle');
+                    modalBody = document.getElementById('modalBody');
+                    modalFooter = document.getElementById('modalFooter');
+
+                    modalTitle.innerHTML = `<div class="flex items-center">
+                                                <div class="mr-3 flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-primary-100 sm:h-10 sm:w-10">
+                                                    <i class="fas fa-calendar-alt text-primary-600"></i>
+                                                </div>
+                                                <h3 class="text-lg leading-6 font-medium text-gray-900">${info.event.title}</h3>
+                                            </div>`;
+
+                    let body = `<div class="mt-2 space-y-4">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-door-closed text-gray-500 w-5 mr-3"></i>
+                                        <p><strong>Room:</strong> ${info.event.extendedProps.room_name}</p>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-clock text-gray-500 w-5 mr-3"></i>
+                                        <p><strong>Time:</strong> ${new Date(info.event.start).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${new Date(info.event.end).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-info-circle text-gray-500 w-5 mr-3"></i>
+                                        <p><strong>Status:</strong> <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${info.event.extendedProps.status === 'pending_confirmation' ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'}">${info.event.extendedProps.status.replace('_', ' ')}</span></p>
+                                    </div>
+                                </div>`;
+                    modalBody.innerHTML = body;
+
+                    let footer = '';
+                    if (info.event.extendedProps.status === 'pending_confirmation') {
+                        footer += `<button type="button" class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm" onclick="window.Livewire.dispatch('confirmMeeting', { meetingId: ${info.event.id} }); closeModal();"><i class="fas fa-check mr-2"></i>Confirm</button>`;
+                        footer += `<button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" onclick="window.Livewire.dispatch('cancelMeeting', { meetingId: ${info.event.id} }); closeModal();"><i class="fas fa-times mr-2"></i>Cancel Meeting</button>`;
+                    }
+                    footer += `<button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" onclick="closeModal()">Close</button>`;
+                    modalFooter.innerHTML = footer;
+
+                    modal.classList.remove('hidden');
+                }
+            });
+            calendar.render();
+        }
+
+        document.addEventListener('livewire:load', function() {
+            window.closeModal = function() {
+                document.getElementById('eventModal').classList.add('hidden');
+            }
+
+            window.Livewire.on('recurringMeetingsUpdated', event => {
+                if (calendar) {
+                    calendar.removeAllEvents();
+                    calendar.addEventSource(event.events);
+                } else {
+                    // If calendar is not initialized yet, initialize it (should not happen with x-init)
+                    // This case is mostly for when the component is loaded as the initial tab.
+                    initFullCalendar(event.events);
+                }
+            });
+        });
+    </script>
 
     @stack('scripts')
 

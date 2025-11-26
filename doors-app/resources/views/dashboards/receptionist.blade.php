@@ -26,7 +26,7 @@
                                     <p class="font-medium text-gray-700">{{ $meeting->title }}</p>
                                     <p class="text-sm text-gray-500">{{ $meeting->start_time->format('H:i') }} - {{ $meeting->end_time->format('H:i') }} in {{ $meeting->room->name }}</p>
                                 </div>
-                                <a href="{{ route('meeting.room-reservations.show', $meeting->id) }}" class="text-primary hover:text-primary-dark text-sm">Details</a>
+                                <a href="{{ route('meeting.bookings.show', $meeting->id) }}" class="text-primary hover:text-primary-dark text-sm">Details</a>
                             </li>
                         @endforeach
                     </ul>

@@ -80,6 +80,8 @@ class MeetingListController extends Controller
                 'cancelled' => $myMeetings->where('calculated_status', 'cancelled')->count(),
             ];
 
+        } else if ($activeTab === 'my-recurring-meetings') {
+            // The Livewire component will handle its own data.
         } else {
             $query = Meeting::query();
 

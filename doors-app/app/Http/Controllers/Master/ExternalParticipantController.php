@@ -8,6 +8,7 @@ use App\Models\ExternalParticipant;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ExternalParticipantsExport;
 use App\Imports\ExternalParticipantsImport;
+use App\Exports\ExternalParticipantsTemplateExport;
 
 class ExternalParticipantController extends Controller
 {
@@ -90,23 +91,7 @@ class ExternalParticipantController extends Controller
 
     public function downloadTemplate()
     {
-        $headers = [
-            'Content-type'        => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=external_participants_template.csv',
-            'Pragma'              => 'no-cache',
-            'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires'             => '0'
-        ];
-
-        $columns = ['NAME', 'EMAIL', 'PHONE', 'COMPANY', 'DEPARTMENT', 'ADDRESS'];
-
-        $callback = function() use ($columns) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $columns);
-            fclose($file);
-        };
-
-        return response()->stream($callback, 200, $headers);
+        return Excel::download(new ExternalParticipantsTemplateExport, 'external_participants_template.xlsx');
     }
 
     public function import(Request $request)
