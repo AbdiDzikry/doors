@@ -22,6 +22,11 @@ class Meeting extends Model
         'meeting_type',
         'priority_guest_id',
         'status',
+        'is_recurring',
+        'recurring_type',
+        'recurring_end_date',
+        'parent_meeting_id',
+        'confirmation_status',
     ];
 
     protected $appends = ['calculated_status'];
@@ -29,6 +34,7 @@ class Meeting extends Model
     protected $casts = [
         'start_time' => 'datetime',
         'end_time' => 'datetime',
+        'recurring_end_date' => 'datetime',
     ];
 
     public function getCalculatedStatusAttribute()
@@ -69,13 +75,18 @@ class Meeting extends Model
         return $this->hasMany(PantryOrder::class);
     }
 
-    public function recurringMeeting()
-    {
-        return $this->belongsTo(RecurringMeeting::class);
-    }
-
     public function organizer()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Meeting::class, 'parent_meeting_id');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Meeting::class, 'parent_meeting_id');
     }
 }

@@ -3,7 +3,7 @@
 @section('title', 'Meeting List')
 
 @section('content')
-    <div class="container-fluid px-6 py-4" x-data="{ activeTab: '{{ $activeTab }}' }">
+    <div class="container-fluid px-6 py-4" x-data="{ activeTab: '{{ $activeTab }}', calendarInitialized: false }">
         <div class="py-4">
             <h1 class="text-2xl font-bold text-gray-800">Meeting List</h1>
             <p class="text-sm text-gray-600">A list of all scheduled meetings.</p>
@@ -21,6 +21,11 @@
                    :class="{ 'border-primary text-primary': activeTab === 'my-meetings', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'my-meetings' }"
                    class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
                     My Meetings
+                </a>
+                <a href="{{ route('meeting.meeting-lists.index', ['tab' => 'my-recurring-meetings']) }}"
+                   :class="{ 'border-primary text-primary': activeTab === 'my-recurring-meetings', 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== 'my-recurring-meetings' }"
+                   class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                    My Recurring Meetings
                 </a>
             </nav>
         </div>
@@ -328,5 +333,12 @@
                 </div>
             </div>
         </div>
+
+        <!-- My Recurring Meetings Tab -->
+        <div x-show="activeTab === 'my-recurring-meetings'">
+            @livewire('meeting.recurring-meetings-list', key('recurring-meetings-list'))
+        </div>
     </div>
+
+
 @endsection

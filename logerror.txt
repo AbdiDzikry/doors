@@ -1,9 +1,99 @@
-http://127.0.0.1:8000/meeting/bookings/create?room_id=1
-
-akan ada sedikit perubahan pada halaman ini.
-
-1. ada eror yang tidak menampilkan gambar dari ruangan nya
-2. disana kan ada field untuk start time yak. saya ingin itu di suggested untuk waktu rapat terdekat. contoh di jam 12:07 saya ingin memesan rapat, maka di field mengisi nya ke jam terdekat menjadi 12:15 karena hitungan menit kita kelipatan 15 kan.
-3. tambahkan chip status sama seperti di komponen card halaman http://127.0.0.1:8000/meeting/room-reservations di bawah tulisan facilities
-
-sementara ini dulu
+App\Models\Meeting {#1636 ▼ // app\Livewire\Meeting\RecurringMeetingsList.php:48
+  #connection: "mysql"
+  #table: "meetings"
+  #primaryKey: "id"
+  #keyType: "int"
+  +incrementing: true
+  #with: []
+  #withCount: []
+  +preventsLazyLoading: false
+  #perPage: 15
+  +exists: true
+  +wasRecentlyCreated: false
+  #escapeWhenCastingToString: false
+  #attributes: array:17 [▼
+    "id" => 104
+    "user_id" => 1
+    "room_id" => 16
+    "topic" => "test recurring meeting 10"
+    "start_time" => "2025-12-10 11:15:00"
+    "end_time" => "2025-12-10 11:30:00"
+    "status" => "cancelled"
+    "meeting_type" => null
+    "created_at" => "2025-11-26 11:09:17"
+    "updated_at" => "2025-11-26 11:51:30"
+    "priority_guest_id" => null
+    "recurring_meeting_id" => null
+    "is_recurring" => 1
+    "recurring_type" => "weekly"
+    "recurring_end_date" => "2025-12-17"
+    "parent_meeting_id" => 102
+    "confirmation_status" => "pending_confirmation"
+  ]
+  #original: array:17 [▼
+    "id" => 104
+    "user_id" => 1
+    "room_id" => 16
+    "topic" => "test recurring meeting 10"
+    "start_time" => "2025-12-10 11:15:00"
+    "end_time" => "2025-12-10 11:30:00"
+    "status" => "cancelled"
+    "meeting_type" => null
+    "created_at" => "2025-11-26 11:09:17"
+    "updated_at" => "2025-11-26 11:51:30"
+    "priority_guest_id" => null
+    "recurring_meeting_id" => null
+    "is_recurring" => 1
+    "recurring_type" => "weekly"
+    "recurring_end_date" => "2025-12-17"
+    "parent_meeting_id" => 102
+    "confirmation_status" => "pending_confirmation"
+  ]
+  #changes: array:2 [▼
+    "status" => "cancelled"
+    "updated_at" => "2025-11-26 11:51:30"
+  ]
+  #previous: array:2 [▼
+    "status" => "scheduled"
+    "updated_at" => "2025-11-26 11:09:17"
+  ]
+  #casts: array:3 [▼
+    "start_time" => "datetime"
+    "end_time" => "datetime"
+    "recurring_end_date" => "datetime"
+  ]
+  #classCastCache: []
+  #attributeCastCache: []
+  #dateFormat: null
+  #appends: array:1 [▼
+    0 => "calculated_status"
+  ]
+  #dispatchesEvents: []
+  #observables: []
+  #relations: []
+  #touches: []
+  #relationAutoloadCallback: null
+  #relationAutoloadContext: null
+  +timestamps: true
+  +usesUniqueIds: false
+  #hidden: []
+  #visible: []
+  #fillable: array:13 [▼
+    0 => "user_id"
+    1 => "room_id"
+    2 => "topic"
+    3 => "start_time"
+    4 => "end_time"
+    5 => "meeting_type"
+    6 => "priority_guest_id"
+    7 => "status"
+    8 => "is_recurring"
+    9 => "recurring_type"
+    10 => "recurring_end_date"
+    11 => "parent_meeting_id"
+    12 => "confirmation_status"
+  ]
+  #guarded: array:1 [▼
+    0 => "*"
+  ]
+}
