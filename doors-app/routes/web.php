@@ -16,9 +16,17 @@ use App\Http\Controllers\Meeting\BookingController;
 use App\Http\Controllers\Settings\ConfigurationController;
 use App\Http\Controllers\Settings\RolePermissionController;
 use App\Http\Controllers\Dashboard\ReceptionistDashboardController;
+use App\Http\Controllers\UserBookingController;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+// Public booking page for users (no auth required)
+Route::prefix('user-booking')->name('user-booking.')->group(function () {
+    Route::get('/', [UserBookingController::class, 'index'])->name('index');
+    Route::get('/search', [UserBookingController::class, 'search'])->name('search');
+    Route::post('/select', [UserBookingController::class, 'select'])->name('select');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
